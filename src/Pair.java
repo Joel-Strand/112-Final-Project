@@ -1,3 +1,9 @@
+/*
+ * Authors: Joel Strand
+ * Version: 0.1
+ * Date Late Updated: 11/11/23
+ */
+
 public class Pair {
     public double x, y;
 

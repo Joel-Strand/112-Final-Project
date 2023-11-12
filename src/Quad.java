@@ -4,8 +4,6 @@
  * Date Last Updated: 11/11/23
  */
 
-import java.io.LineNumberInputStream;
-
 public class Quad {
 
     private double xMid, yMid, length;
@@ -47,5 +45,4 @@ public class Quad {
     public String toString() {
         return null;
     }
-
 }
