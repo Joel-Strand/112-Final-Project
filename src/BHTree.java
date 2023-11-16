@@ -28,12 +28,15 @@ public class BHTree {
             this.body = b;
         }
 
+        // if internal node
         if (!isExternal()) {
             this.body = this.body.plus(b);
 
             // recurse to insert b into correct quad
             findQuad(b);
-        } else {
+        } 
+        // if external node
+        else {
             // create children
             subdivide();
 
@@ -88,5 +91,25 @@ public class BHTree {
                 SouthEast.updateForce(b);
             }
         }
+    }
+
+    private void updateTree(BHTree tree) {
+        BHTree root = tree;
+        BHTree ptr = root;
+
+        Body bodyTemp = ptr.body;
+        Quad quadTemp = ptr.quad;
+
+
+        if (!ptr.isExternal()) {
+            // if in NW
+
+            // if in NE
+
+            // if in SW
+
+            // if in SE
+        }
+        
     }
 }

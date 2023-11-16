@@ -1,6 +1,6 @@
 /*
  * Authors: Joel Strand
- * Version: 0.1
+ * Version: 0.2
  * Date Last Updated: 11/11/23
  */
 
@@ -18,20 +18,19 @@ public class Body {
     public Body(Pair pos, Pair velo, double mass) {
         this.s = pos;
         this.v = velo;
-        this.f = new Pair(0,0);
+        this.f = new Pair(0, 0);
         this.mass = mass;
     }
 
     public double distanceBetween(Body b) {
-        // Return euclidean distance between this and b
+        // return euclidean distance between this and b
         double dx = this.s.x - b.s.x;
         double dy = this.s.y - b.s.y;
         return Math.sqrt((dx * dx) + (dy * dy));
     }
 
     public void addForce(Body b) {
-        // softening
-        double soft = 75;
+        double soft = 75; // softening so forces don't become extreme when bodies are close
         double dx = b.s.x - this.s.x;
         double dy = b.s.y - this.s.y;
         double dist = Math.sqrt((dx * dx) + (dy * dy));
@@ -71,7 +70,4 @@ public class Body {
     public String toString() {
         return String.format("%10E %10E %10E %10E %10E", s.x, s.y, v.x, v.y, mass);
     }
-
-
-
 }
