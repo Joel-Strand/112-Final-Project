@@ -69,7 +69,7 @@ public class Main extends JPanel {
         g.fillRect(0, 0, _WIDTH, _HEIGHT);
 
         // update here
-
+        updateTree(tree, g);
     }
 
     private void readFromFile(String filePath) {
@@ -119,5 +119,36 @@ public class Main extends JPanel {
         }
 
         return ret;
+    }
+
+    private void updateTree(BHTree tree, Graphics g) {
+        if (!tree.isExternal()) {
+            if (tree.NorthWest != null) {
+                insert(tree.NorthWest.body);
+                updateForce(tree.NorthWest.body);
+                updateTree(tree.Northwest);
+            }
+
+            if (tree.NorthEast != null) {
+                insert(tree.NorthEast.body);
+                updateForce(tree.NorthEast.body);
+                updateTree(tree.NorthEast);
+            }
+
+            if (tree.SouthWest != null) {
+                insert(tree.SouthWest.body);
+                updateForce(tree.SouthWest.body);
+                updateTree(tree.SouthWest);
+            }
+
+            if (tree.SouthEast != null) {
+                insert(tree.SouthEast.body);
+                updateForce(tree.SouthEast.body);
+                updateTree(tree.SouthEast);
+            }
+        } else {
+            // render
+            tree.body.draw(g);
+        }
     }
 }

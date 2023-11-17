@@ -11,7 +11,7 @@ public class BHTree {
 
     private Body body;
     private Quad quad;
-    private BHTree NorthEast, NorthWest, SouthEast, SouthWest;
+    public BHTree NorthEast, NorthWest, SouthEast, SouthWest;
 
     public BHTree(Quad q) {
         this.quad = q;
@@ -49,7 +49,7 @@ public class BHTree {
         }
     }
 
-    private boolean isExternal() {
+    public boolean isExternal() {
         return (NorthWest == null && NorthEast == null && SouthWest == null && SouthEast == null);
     }
 
@@ -92,37 +92,5 @@ public class BHTree {
                 SouthEast.updateForce(b);
             }
         }
-    }
-
-    private void updateTree(BHTree tree) {
-        if (!tree.isExternal()) {
-            if (tree.NorthWest != null) {
-                insert(tree.NorthWest.body);
-                updateForce(tree.NorthWest.body);
-                updateTree(tree.Northwest);
-            }
-
-            if (tree.NorthEast != null) {
-                insert(tree.NorthEast.body);
-                updateForce(tree.NorthEast.body);
-                updateTree(tree.NorthEast);
-            }
-
-            if (tree.SouthWest != null) {
-                insert(tree.SouthWest.body);
-                updateForce(tree.SouthWest.body);
-                updateTree(tree.SouthWest);
-            }
-
-            if (tree.SouthEast != null) {
-                insert(tree.SouthEast.body);
-                updateForce(tree.SouthEast.body);
-                updateTree(tree.SouthEast);
-            }
-        } else {
-            // render
-            tree.body.draw();
-        }
-        
     }
 }
