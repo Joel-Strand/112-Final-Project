@@ -6,7 +6,7 @@
 
 public class BHTree {
     // Change to adjust distance approximation threshold.
-    // 0 = brute force, 1.75+ = heavy appprox 
+    // 0 = brute force, 1.75+ = heavy approx
     private static final double theta = 0.5;
 
     public Body body;
