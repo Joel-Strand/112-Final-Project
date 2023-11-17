@@ -8,7 +8,6 @@ public class BHTree {
     // Change to adjust distance approximation threshold.
     // 0 = brute force, 1.75+ = heavy approx
     private static final double theta = 0.5;
-
     public Body body;
     private Quad quad;
     public BHTree NorthEast, NorthWest, SouthEast, SouthWest;
@@ -92,5 +91,9 @@ public class BHTree {
                 SouthEast.updateForce(b);
             }
         }
+    }
+
+    public Quad getQuad() {
+        return this.quad;
     }
 }
