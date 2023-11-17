@@ -9,7 +9,7 @@ public class BHTree {
     // 0 = brute force, 1.75+ = heavy appprox 
     private static final double theta = 0.5;
 
-    private Body body;
+    public Body body;
     private Quad quad;
     public BHTree NorthEast, NorthWest, SouthEast, SouthWest;
 

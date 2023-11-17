@@ -28,6 +28,12 @@ public class Main extends JPanel {
     private ArrayList<Body> bodies;
 
     class Thread1 extends Thread {
+        private BHTree tree;
+
+        public Thread1(BHTree tree, Graphics g) {
+            this.tree = tree;
+        }
+
         @Override
         public void run() {
             while (true) {
@@ -36,6 +42,7 @@ public class Main extends JPanel {
                 try {
                     Thread.sleep(1000 / _FPS);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -44,8 +51,9 @@ public class Main extends JPanel {
     public Main(String filePath) {
         this.setPreferredSize(new Dimension(_WIDTH, _HEIGHT));
         readFromFile(filePath);
-        Thread Thread1 = new Thread(); // need new Thread(new BHTree(new Quad()))??
+        Thread Thread1 = new Thread1(tree, getGraphics()); // need new Thread(new BHTree(new Quad()))??
         Thread1.start();
+        System.out.println("running in Thread");
     }
 
 
@@ -114,6 +122,7 @@ public class Main extends JPanel {
         double b = Double.parseDouble(base);
         double e = Double.parseDouble(exp);
         double ret = b;
+        
         for (int i = 0; i < e; i++) {
             ret *= b;
         }
@@ -124,27 +133,27 @@ public class Main extends JPanel {
     private void updateTree(BHTree tree, Graphics g) {
         if (!tree.isExternal()) {
             if (tree.NorthWest != null) {
-                insert(tree.NorthWest.body);
-                updateForce(tree.NorthWest.body);
-                updateTree(tree.Northwest);
+                tree.insert(tree.NorthWest.body);
+                tree.updateForce(tree.NorthWest.body);
+                updateTree(tree.NorthWest, g);
             }
 
             if (tree.NorthEast != null) {
-                insert(tree.NorthEast.body);
-                updateForce(tree.NorthEast.body);
-                updateTree(tree.NorthEast);
+                tree.insert(tree.NorthEast.body);
+                tree.updateForce(tree.NorthEast.body);
+                updateTree(tree.NorthEast, g);
             }
 
             if (tree.SouthWest != null) {
-                insert(tree.SouthWest.body);
-                updateForce(tree.SouthWest.body);
-                updateTree(tree.SouthWest);
+                tree.insert(tree.SouthWest.body);
+                tree.updateForce(tree.SouthWest.body);
+                updateTree(tree.SouthWest, g);
             }
 
             if (tree.SouthEast != null) {
-                insert(tree.SouthEast.body);
-                updateForce(tree.SouthEast.body);
-                updateTree(tree.SouthEast);
+                tree.insert(tree.SouthEast.body);
+                tree.updateForce(tree.SouthEast.body);
+                updateTree(tree.SouthEast, g);
             }
         } else {
             // render
