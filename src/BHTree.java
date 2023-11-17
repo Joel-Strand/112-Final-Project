@@ -34,7 +34,8 @@ public class BHTree {
 
             // recurse to insert b into correct quad
             findQuad(b);
-        } 
+        }
+
         // if external node
         else {
             // create children
@@ -94,21 +95,33 @@ public class BHTree {
     }
 
     private void updateTree(BHTree tree) {
-        BHTree root = tree;
-        BHTree ptr = root;
+        if (!tree.isExternal()) {
+            if (tree.NorthWest != null) {
+                insert(tree.NorthWest.body);
+                updateForce(tree.NorthWest.body);
+                updateTree(tree.Northwest);
+            }
 
-        Body bodyTemp = ptr.body;
-        Quad quadTemp = ptr.quad;
+            if (tree.NorthEast != null) {
+                insert(tree.NorthEast.body);
+                updateForce(tree.NorthEast.body);
+                updateTree(tree.NorthEast);
+            }
 
+            if (tree.SouthWest != null) {
+                insert(tree.SouthWest.body);
+                updateForce(tree.SouthWest.body);
+                updateTree(tree.SouthWest);
+            }
 
-        if (!ptr.isExternal()) {
-            // if in NW
-
-            // if in NE
-
-            // if in SW
-
-            // if in SE
+            if (tree.SouthEast != null) {
+                insert(tree.SouthEast.body);
+                updateForce(tree.SouthEast.body);
+                updateTree(tree.SouthEast);
+            }
+        } else {
+            // render
+            tree.body.draw();
         }
         
     }

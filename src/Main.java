@@ -1,10 +1,8 @@
 /*
  * Authors: Joel Strand
- * Version: 0.1
  * Date Last Updated: 11/11/23
  */
 
-import javax.swing.JPanel;
 import javax.swing.JFrame;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -19,6 +17,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import javax.swing.JPanel;
+
 
 public class Main extends JPanel {
 
@@ -71,9 +70,9 @@ public class Main extends JPanel {
 
         // update here
 
-    }   
+    }
 
-     private void readFromFile(String filePath) {    
+    private void readFromFile(String filePath) {
         File file = new File(filePath);
         try {
             Scanner s = new Scanner(file);
@@ -87,7 +86,7 @@ public class Main extends JPanel {
                 double mass = parseNum(temp[4]);
 
                 Body body = new Body(pos, vel, mass);
-                this.tree.insert(body);                
+                this.tree.insert(body);
             }
             s.close();
         } catch (FileNotFoundException e) {
@@ -121,4 +120,4 @@ public class Main extends JPanel {
 
         return ret;
     }
-}  
+}
