@@ -61,13 +61,35 @@ public class Body {
         return q.contains(this.s.x, this.s.y);
     }
 
+    public void resetForce() {
+        f.x = 0.0;
+        f.y = 0.0;
+    }
+
     public void draw(Graphics g) {
         Color c = g.getColor();
         g.setColor(Color.RED);
-        g.drawOval((int) s.x, (int) s.y, 5, 5);
+        g.drawOval((int) s.x, (int) s.y, 2, 2);
+        g.setColor(c);
     }
 
     public String toString() {
         return String.format("%10E %10E %10E %10E %10E", s.x, s.y, v.x, v.y, mass);
+    }
+
+    public Pair getPos() {
+        return this.s;
+    }
+
+    public Pair getVelo() {
+        return this.v;
+    }
+
+    public Pair getForce() {
+        return this.f;
+    }
+
+    public double getMass() {
+        return this.mass;
     }
 }
