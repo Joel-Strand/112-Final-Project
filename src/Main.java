@@ -4,92 +4,97 @@
  */
 
 import javax.swing.JFrame;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 
-
 public class Main extends JPanel {
 
+    // Constants for FPS, width, and height of the display
     private static final int _FPS = 60;
     private static final int _WIDTH = 1024;
     private static final int _HEIGHT = 768;
-    private Body[] bodies;
+
+    // Variables for simulation parameters
+    private int numBodies;
     private double radius;
     private double deltaTime;
-    private int numBodies;
+    private Body[] bodies;
 
-
+    // Inner class implementing Runnable for simulation loop
     class Runner implements Runnable {
         public void run() {
+            // Continuous simulation loop
             while (true) {
-                paintComponent(getGraphics());
+                // Perform universe simulation based on defined parameters
                 simUniverse(bodies, deltaTime, radius, getGraphics());
-                repaint();
                 try {
+                    // Control FPS (frames per second) by introducing a delay
                     Thread.sleep(1000 / _FPS);
                 } catch (InterruptedException e) {
+                    // Exception handling for thread interruption
                 }
             }
-
         }
     }
     
+    // Constructor for the Main class
     public Main() {
+        // Set the preferred size of the panel to the defined width and height
         this.setPreferredSize(new Dimension(_WIDTH, _HEIGHT));
         Scanner s = new Scanner(System.in);
-
+        // Read input values for the number of bodies and the radius
         this.numBodies = s.nextInt();
         this.radius = s.nextDouble();
-        this.deltaTime = 0.1d;
-        this.bodies = new Body[numBodies];
+        this.deltaTime = 0.1d; // Set the time increment for simulation
+        this.bodies = new Body[numBodies]; // Initialize an array to hold bodies
 
+        // Parse information for each body from the input source
         parseInfo(bodies, numBodies, s);
 
+        // Create a new thread for running the simulation loop and start it
         Thread t = new Thread(new Runner());
         t.start();
-        System.out.println("running in Thread");
+        System.out.println("Running in Thread"); // Output message for the console
     }
 
-
+    // Main method for running the simulation
     public static void main(String[] args) {
+        // Create a new JFrame for displaying the simulation
         JFrame frame = new JFrame("SPACE!!!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Main mainInstance = new Main(); // java Main < [filePath]
-        frame.setContentPane(mainInstance);
+        Main mainInstance = new Main(); // Create an instance of the Main class
+        frame.setContentPane(mainInstance); // Set the content pane to the Main instance
         frame.pack();
-        frame.setVisible(true);
-    
+        frame.setVisible(true); // Set the frame to be visible
     }
 
+    // Method to parse information for each body from the input
     private void parseInfo(Body[] bodies, int numBodies, Scanner s) {
         for (int i = 0; i < numBodies; i++) {
+            // Read parameters for each body (position, velocity, mass)
             double sx = s.nextDouble();
             double sy = s.nextDouble();
             double vx = s.nextDouble();
             double vy = s.nextDouble();
             double m = s.nextDouble();
 
+            // Create a new Body object with the parsed information and add it to the array
             Body b = new Body(new Pair(sx, sy), new Pair(vx, vy), m);
             bodies[i] = b;
         }
     }
 
+    // Method to simulate the universe based on gravitational interactions between bodies
     private void simUniverse(Body[] bodies, double deltaTime, double radius, Graphics g) {
-        for (double i = 0; true; i += deltaTime) {
+        while (true) {
+            // Create quad, Barnes-Hut tree for force calculation
             Quad q = new Quad(0, 0, radius * 2);
             BHTree tree = new BHTree(q);
 
+            // Insert bodies into the tree
             for (int j = 0; j < bodies.length; j++) {
                 Body b = bodies[j];
                 if (b.inQuad(q)) {
@@ -97,111 +102,32 @@ public class Main extends JPanel {
                 }
             }
 
-            for (int j = 0; j < bodies.length; j++) {
-                Body b = bodies[j];
+            // Update forces acting on each body within the tree
+            for (Body b : bodies) {
                 b.resetForce();
                 tree.updateForce(b);
                 b.update(deltaTime);
             }
 
+            // Draw the bodies
             for (Body b : bodies) {
                 b.draw(g);
             }
-
+            repaint(); // Redraw the panel
         }
     }
 
+    // Panel Focus
     public void addNotify() {
         super.addNotify();
         requestFocus();
     }
 
+    // Override the paintComponent method to draw a black background for the panel
+    @Override
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        super.paintComponent(g); 
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, _WIDTH, _HEIGHT);
-    }
-
-    // private void readFromFile(String filePath) {
-    //     File file = new File(filePath);
-    //     try {
-    //         Scanner s = new Scanner(file);
-    //         double uniWidth = s.nextDouble();
-    //         this.tree = new BHTree(new Quad(0, 0, uniWidth));
-    //         while (s.hasNextLine()) {
-    //             String[] temp = s.nextLine().split(" ");
-
-    //             Pair pos = new Pair(parseNum(temp[0]), parseNum(temp[1]));
-    //             Pair vel = new Pair(parseNum(temp[2]), parseNum(temp[3]));
-    //             double mass = parseNum(temp[4]);
-
-    //             Body body = new Body(pos, vel, mass);
-    //             this.tree.insert(body);
-    //         }
-    //         s.close();
-    //     } catch (FileNotFoundException e) {
-    //         System.out.println("File Not Found @ " + filePath);
-    //         e.printStackTrace();
-    //     }
-    // }
-
-    // private double parseNum(String num) {
-    //     String base = "";
-    //     String exp = "";
-
-    //     for (int i = 0; i < num.length(); i++) {
-    //         char c = num.charAt(i);
-    //         if (c == 'E') {
-    //             exp += num.charAt(i+1);
-    //             if (num.charAt(i+2) != ' ') {
-    //                 exp += num.charAt(i + 2);
-    //             }
-    //         } else {
-    //             base += c;
-    //         }
-    //     }
-
-    //     double b = Double.parseDouble(base);
-    //     double e = Double.parseDouble(exp);
-    //     double ret = b;
-        
-    //     for (int i = 0; i < e; i++) {
-    //         ret *= b;
-    //     }
-
-    //     return ret;
-    // }
-
-    private void updateTree(BHTree tree, Graphics g) {
-        if (!tree.isExternal()) {
-            Body b = tree.body;
-
-            if (b.inQuad(tree.NorthWest.getQuad())) {
-                tree.insert(b);
-                tree.updateForce(b);
-                updateTree(tree.NorthWest, g);
-            }
-
-            if (b.inQuad(tree.NorthEast.getQuad())) {
-                tree.insert(b);
-                tree.updateForce(b);
-                updateTree(tree.NorthEast, g);
-            }
-
-            if (b.inQuad(tree.SouthWest.getQuad())) {
-                tree.insert(b);
-                tree.updateForce(b);
-                updateTree(tree.SouthWest, g);
-            }
-
-            if (b.inQuad(tree.SouthEast.getQuad())) {
-                tree.insert(b);
-                tree.updateForce(b);
-                updateTree(tree.SouthEast, g);
-            }
-        } else {
-            // render
-            tree.body.draw(g);
-        }
+        g.fillRect(0, 0, _WIDTH, _HEIGHT); // Fill the panel with a black color
     }
 }
