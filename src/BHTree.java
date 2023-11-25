@@ -1,7 +1,6 @@
 /*
  * Authors: Joel Strand
- * Version: 0.2
- * Date Last Updated: 11/17/23
+ * Date Last Updated: 11/25/23
  */
 
 // Implementation of a Barnes-Hut Tree (BHTree) for a QuadTree interface
@@ -11,9 +10,9 @@ public class BHTree implements QuadTree {
     private static final double theta = 0.5;
 
     // Variables for storing body, quad, and tree divisions
-    public Body body;
+    private Body body;
     private Quad quad;
-    public BHTree NorthEast, NorthWest, SouthEast, SouthWest;
+    private BHTree NorthEast, NorthWest, SouthEast, SouthWest;
 
     // Constructor for BHTree with a given quad
     public BHTree(Quad q) {
@@ -29,33 +28,38 @@ public class BHTree implements QuadTree {
     @Override
     public void insert(Body b) {
 
+        // If current node empty, insert b
         if (this.body == null) {
             this.body = b;
             return;
         }
 
+        // If current node is internal, add masses and continue recursion with b
         if (!isExternal()) {
             this.body = this.body.plus(b); // Combine masses
-            findQuad(b); // Recurse to continue search
-        } else {
+            recurse(b); // Recurse to continue search
+        } 
+        
+        // If current node is external, create children and recurse with BOTH this.body and b, then add masses
+        else {
             subdivide(); // Create children
 
             // Recurse with both bodies to replace in appropriate new sub-quadrants
-            findQuad(this.body);
-            findQuad(b);
-
-            this.body = body.plus(b); // Combine masses
+            recurse(this.body);
+            recurse(b);
+            
+            this.body = this.body.plus(b); // Combine masses
         }
     }
 
     // Method to check if the node is external (has no children)
     @Override
     public boolean isExternal() {
-        return (NorthWest == null && NorthEast == null && SouthWest == null && SouthEast == null);
+        return (this.NorthWest == null && this.NorthEast == null && this.SouthWest == null && this.SouthEast == null);
     }
 
     // Method to assign the quadrant for a body
-    private void findQuad(Body b) {
+    private void recurse(Body b) {
         if (b.inQuad(quad.NorthWest())) {
             NorthWest.insert(b);
         } else if (b.inQuad(quad.NorthEast())) {
@@ -89,8 +93,11 @@ public class BHTree implements QuadTree {
             double dist = this.body.distanceBetween(b);
 
             if ((width / dist) < theta) {
+                // System.out.println("BEFORE: X: " + b.getForce().x + " Y: " +  b.getForce().y);
                 b.addForce(this.body);
+                // System.out.println("AFTER: X: " + b.getForce().x + " Y: " +  b.getForce().y);
             } else {
+                // Recurse through every quad
                 NorthWest.updateForce(b);
                 NorthEast.updateForce(b);
                 SouthWest.updateForce(b);

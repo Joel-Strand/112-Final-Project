@@ -1,7 +1,6 @@
 /*
  * Authors: Joel Strand
- * Version: 0.1
- * Date Last Updated: 11/11/23
+ * Date Last Updated: 11/17/23
  */
 
 // Represents a square area used in spatial partitioning
@@ -33,19 +32,23 @@ public class Quad {
 
     // Methods to create new quads representing different sub-quadrants
     public Quad NorthEast() {
-        return new Quad(xMid + (.5 * length), yMid + (.5 * length), length / 2);
+        return new Quad(xMid + (.25 * length), yMid + (.25 * length), length / 2);
     }
 
     public Quad NorthWest() {
-        return new Quad(xMid - (.5 * length), yMid + (.5 * length), length / 2);
+        return new Quad(xMid - (.25 * length), yMid + (.25 * length), length / 2);
     }
 
     public Quad SouthEast() {
-        return new Quad(xMid + (.5 * length), yMid - (.5 * length), length / 2);
+        return new Quad(xMid + (.25 * length), yMid - (.25 * length), length / 2);
     }
 
     public Quad SouthWest() {
-        return new Quad(xMid - (.5 * length), yMid - (.5 * length), length / 2);
+        return new Quad(xMid - (.25 * length), yMid - (.25 * length), length / 2);
+    }
+
+    public void draw() {
+        StdDraw.rectangle(xMid, yMid, length / 2.0, length / 2.0);
     }
 
     // Method to represent the Quad as a string (Not implemented in the code)
