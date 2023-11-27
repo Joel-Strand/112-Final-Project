@@ -1,6 +1,6 @@
 /*
  * Authors: Joel Strand
- * Date Last Updated: 11/25/23
+ * Date Last Updated: 11/27/23
  */
 
 // Implementation of a Barnes-Hut Tree (BHTree) for a QuadTree interface
@@ -105,9 +105,7 @@ public class BHTree implements QuadTree {
             System.out.println("\tRATIO: " + width / dist);
 
             if ((width / dist) < theta) {
-                
                 b.addForce(this.body);
-                
             } else {
                 // Recurse through every quad
                 System.out.println("UF: Entering NW");
