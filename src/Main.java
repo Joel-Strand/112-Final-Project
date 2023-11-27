@@ -67,6 +67,8 @@ public class Main extends JPanel {
             Quad q = new Quad(0, 0, radius * 2);
             BHTree tree = new BHTree(q);
 
+            System.out.println("-------------");
+
             // Insert bodies into the tree
             for (Body b : bodies) {
                 if (b.inQuad(q)) {
@@ -74,23 +76,27 @@ public class Main extends JPanel {
                 }
             }
 
-            // Update forces acting on each body within the tree
-            for (Body b : bodies) {
-                // System.out.println("BEFORE: " + b.toString());
-                b.resetForce();
-                tree.updateForce(b);
-                // System.out.println("UPDATE: " + b.toString());
-                b.update(deltaTime);  
-                // System.out.println("AFTER: " + b.toString());  
-                // System.out.println("--------------");
-            }
+            System.out.println("insertion complete");
+            return;
 
-            // Draw the bodies
-            StdDraw.clear(StdDraw.BLACK);
-            for (Body b : bodies) {
-                 b.draw();
-            }
-            StdDraw.show(10);
+            // // Update forces acting on each body within the tree
+            // for (Body b : bodies) {
+            //     System.out.println("BEFORE: " + b.toString());
+            //     b.resetForce();
+            //     tree.updateForce(b);
+            //     System.out.println("UPDATE: " + b.toString());
+            //     b.update(deltaTime);  
+            //     System.out.println("AFTER: " + b.toString());  
+            //     System.out.println("--------------");
+            // }
+
+            // // Draw the bodies
+            // StdDraw.clear(StdDraw.BLACK);
+            // for (Body b : bodies) {
+            //      b.draw();
+            // }
+            // StdDraw.show(10);
+            // System.out.println("-------------");
         }
     }
 }
