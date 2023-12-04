@@ -12,7 +12,7 @@ public class Body {
     private static final double g = 0.0000000000667;
 
     // Fields defining the position, velocity, force, mass, and color of the body
-    private Pair s, v, f;
+    public Pair s, v, f;
     private double mass;
     private Color color;
 
@@ -35,8 +35,8 @@ public class Body {
     // Method to compute the gravitational force acting on this body due to another body 'b'
     public void addForce(Body b) {
         double soft = 75; // Softening factor to prevent extreme forces when bodies are close
-        double dx = this.s.x - b.s.x;
-        double dy = this.s.y - b.s.y;
+        double dx = b.s.x - this.s.x ;
+        double dy = b.s.y - this.s.y;
         double dist = Math.sqrt((dx * dx) + (dy * dy)); // Calculate Euclidean Distance
         double force = (g * b.mass * this.mass) / ((dist * dist) + (soft * soft));
         this.f.x += (force * dx) / dist;
@@ -49,6 +49,7 @@ public class Body {
         this.v.y += (deltaTime * this.f.y) / this.mass;  
         this.s.x += deltaTime * this.v.x;
         this.s.y += deltaTime * this.v.y;
+
     }
 
     // Method to compute a new body by combining this body with another body 'b'
