@@ -4,6 +4,8 @@
  */
 
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Random;
 import java.awt.Color;
 import javax.swing.JPanel;
 
@@ -11,10 +13,10 @@ import javax.swing.JPanel;
 public class Main extends JPanel {
 
     // Variables for simulation parameters
+    private final static double deltaTime = 0.1;
     private static int numBodies;
     private static double radius;
-    private final static double deltaTime = 0.1;
-    private static Body[] bodies;
+    private static ArrayList<Body> bodies;
 
     // Main method
     public static void main(String[] args) {
@@ -22,7 +24,7 @@ public class Main extends JPanel {
 
         numBodies = s.nextInt(); // Number of bodies in universe
         radius = s.nextDouble(); // Radius of universe
-        bodies = new Body[numBodies];
+        bodies = new ArrayList<>();
 
         // Enable animation mode and recalibrate coords
         StdDraw.show(0);
@@ -41,7 +43,7 @@ public class Main extends JPanel {
     }
 
     // Method to parse information for each body from the input
-    private static void parseInfo(Body[] bodies, int numBodies, Scanner s) {
+    private static void parseInfo(ArrayList<Body> bodies, int numBodies, Scanner s) {
         for (int i = 0; i < numBodies; i++) {
             // Read parameters for each body (position, velocity, mass)
             double sx = s.nextDouble();
@@ -56,14 +58,25 @@ public class Main extends JPanel {
 
             // Create a new Body object with the parsed information and add it to the array
             Body body = new Body(new Pair(sx, sy), new Pair(vx, vy), m, c);
-            bodies[i] = body;
+            bodies.add(body);
         }
     }
 
     // Method to simulate the universe based on gravitational interactions between
     // bodies
-    private static void simUniverse(Body[] bodies, double deltaTime, double radius) {
+    private static void simUniverse(ArrayList<Body> bodies, double deltaTime, double radius) {
         while (true) {
+            if (StdDraw.mousePressed()) {
+                Random rand = new Random();
+                Pair pos = new Pair(StdDraw.mouseX(), StdDraw.mouseY());
+                Pair velo = new Pair(rand.nextDouble() * 10000, rand.nextDouble() * 10000);
+                double mass = factorial(15);
+                Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+                Body b = new Body(pos, velo, mass, c);
+                bodies.add(b);
+            }
+
+            
             // Create quad, Barnes-Hut tree for force calculation
             Quad q = new Quad(0, 0, radius * 2);
             BHTree tree = new BHTree(q);
@@ -75,33 +88,27 @@ public class Main extends JPanel {
                 }
             }
 
-            // return;
-
-            // Update forces acting on each body within the tree
-            // bodies[0].f.x += 1000;
-            // bodies[0].f.y += 1000;
-            // bodies[0].v.x += 100000;
-            // bodies[0].v.y += 100000;
+            // Reset and update forces acting on every body, then update position
             for (Body b : bodies) {
                 b.resetForce();
                 tree.updateForce(b);
                 b.update(deltaTime);  
             }
 
-            // System.out.println("Before: Pos: " + bodies[0].s.x + " " + bodies[0].s.y + " Velo: " + bodies[0].v.x + " " + bodies[0].v.y + " Force: " + bodies[0].f.x + " " + bodies[0].f.y);
-            // bodies[0].update(deltaTime);
-            // System.out.println("After: Pos: " + bodies[0].s.x + " " + bodies[0].s.y + " Velo: " + bodies[0].v.x + " " + bodies[0].v.y + " Force: " + bodies[0].f.x + " " + bodies[0].f.y);
-
-
-
-
             // Draw the bodies
             StdDraw.clear(StdDraw.BLACK);
             for (Body b : bodies) {
-                 b.draw();
+                    b.draw();
             }
             StdDraw.show(10);
-
         }
+    }   
+
+    private static double factorial(int factor) {
+        int res = 1;
+        for (int i = 1; i < factor; i++) {
+            res *= factor;
+        }
+        return res;
     }
 }

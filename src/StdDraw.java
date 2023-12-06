@@ -80,10 +80,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
     // current pen color
     private static Color penColor;
 
-    // default canvas size is DEFAULT_SIZE-by-DEFAULT_SIZE
-    private static final int DEFAULT_SIZE = 512;
-    private static int width  = DEFAULT_SIZE;
-    private static int height = DEFAULT_SIZE;
+    // WIDTH AND HEIGHT ADJUSTED BY JOEL
+    private static final int DEFAULT_SIZE = 1024;
+    private static int width  = 1440;
+    private static int height = 750;
 
     // default pen radius
     private static final double DEFAULT_PEN_RADIUS = 0.002;
