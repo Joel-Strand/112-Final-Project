@@ -7,7 +7,7 @@
 public class BHTree implements QuadTree {
 
     // Constant representing the critical ratio for Barnes-Hut approximation
-    private static final double theta = 0.5;
+    private double theta;
 
     // Variables for storing body, quad, and tree divisions
     private Body body;
@@ -108,5 +108,10 @@ public class BHTree implements QuadTree {
     @Override
     public Quad getQuad() {
         return this.quad;
+    }
+
+    @Override
+    public void setTheta(double theta) {
+        this.theta = theta;
     }
 }

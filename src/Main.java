@@ -1,12 +1,14 @@
 /*
  * Authors: Joel Strand, Liam Davis, Aiden Taghinia
- * Date Last Updated: 11/27/23
+ * Date Last Updated: 12/6/23
  */
 
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JPanel;
 
 // Main class for program execution
@@ -21,7 +23,8 @@ public class Main extends JPanel {
     // Main method
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in); // Scanner for reading file input
-
+        double theta = Double.parseDouble(args[0]);
+        System.out.println(theta);
         numBodies = s.nextInt(); // Number of bodies in universe
         radius = s.nextDouble(); // Radius of universe
         bodies = new ArrayList<>();
@@ -32,7 +35,7 @@ public class Main extends JPanel {
         StdDraw.setYscale(-radius, +radius);
 
         parseInfo(bodies, numBodies, s);
-        simUniverse(bodies, deltaTime, radius);
+        simUniverse(bodies, theta, deltaTime, radius);
     }
 
     // Panel Focus
@@ -64,22 +67,12 @@ public class Main extends JPanel {
 
     // Method to simulate the universe based on gravitational interactions between
     // bodies
-    private static void simUniverse(ArrayList<Body> bodies, double deltaTime, double radius) {
+    private static void simUniverse(ArrayList<Body> bodies, double theta, double deltaTime, double radius) {
         while (true) {
-            if (StdDraw.mousePressed()) {
-                Random rand = new Random();
-                Pair pos = new Pair(StdDraw.mouseX(), StdDraw.mouseY());
-                Pair velo = new Pair(rand.nextDouble() * 10000, rand.nextDouble() * 10000);
-                double mass = factorial(15);
-                Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-                Body b = new Body(pos, velo, mass, c);
-                bodies.add(b);
-            }
-
-            
             // Create quad, Barnes-Hut tree for force calculation
             Quad q = new Quad(0, 0, radius * 2);
             BHTree tree = new BHTree(q);
+            tree.setTheta(theta);
 
             // Insert bodies into the tree
             for (Body b : bodies) {
@@ -92,21 +85,90 @@ public class Main extends JPanel {
             for (Body b : bodies) {
                 b.resetForce();
                 tree.updateForce(b);
-                b.update(deltaTime);  
+                b.update(deltaTime);
             }
 
             // Draw the bodies
             StdDraw.clear(StdDraw.BLACK);
             for (Body b : bodies) {
-                    b.draw();
+                b.draw();
             }
             StdDraw.show(10);
+
+            // Add bodies to tree AFTER tree is created and updated
+            // Guarantees these bodies will be inserted and added next frame.
+            if (StdDraw.mousePressed()) {
+                Random rand = new Random();
+                double Mx = StdDraw.mouseX();
+                double My = StdDraw.mouseY();
+                double mass = factorial(rand.nextInt(50));
+                Pair pos = new Pair(Mx, My);
+                Pair velo = new Pair(0,0);
+                Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+
+                if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {         // Left arrow
+                    velo.x -= rand.nextInt(100) * 100;
+                } else if (StdDraw.isKeyPressed(KeyEvent.VK_UP)) {   // Up arrow
+                    velo.y += rand.nextInt(100) * 100;
+                } else if (StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) {  // Right Arrow
+                    velo.x += rand.nextInt(100) * 100;
+                } else if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {  // Down Arrow
+                    velo.y -= rand.nextInt(100) * 100;
+                } else {
+                    double d = Math.random();
+                    if (d < 0.25) {
+                        velo = new Pair(rand.nextInt(100) * 100, rand.nextInt(100) * 100);
+                    } else if (d < 0.5 && d >= 0.25) {
+                        velo = new Pair(rand.nextInt(100) * 100, -(rand.nextInt(100) * 100));
+                    } else if (d < 0.75 && d >= 0.5) {
+                        velo = new Pair(-(rand.nextInt(100) * 100), rand.nextInt(100) * 100);
+                    } else {
+                        velo = new Pair(-(rand.nextInt(100) * 100), -(rand.nextInt(100) * 100));
+                    }
+                }
+                bodies.add(new Body(pos, velo, mass, c));
+            }
         }
-    }   
+    }
+
+    private static Pair initVeloFromKeys(char c) {
+        Random rand = new Random();
+        switch (c) {
+            case 37: 
+                return new Pair(-rand.nextInt() * 10000, 0);
+            case 38: 
+                return new Pair(0, rand.nextInt() * 10000);
+            case 39: 
+                return new Pair(rand.nextInt() * 10000, 0);
+            case 40: 
+                return new Pair(0, -rand.nextInt() * 10000);
+            default: 
+                break; 
+        }
+        return null;
+    }
+
+    // private static Body createBody() {
+    //     Random rand = new Random();
+    //     double Mx = StdDraw.mouseX();
+    //     double My = StdDraw.mouseY();
+    //     double mass = factorial(rand.nextInt(50));
+    //     Pair pos = new Pair(Mx, My);
+    //     Pair velo = new Pair(0,0);
+    //     Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+
+    //     if (hasNextKeyTyped()) {
+    //         char c = StdDraw.nextKeyTyped();    
+    //         velo = initVeloFromKeys(c);
+    //     } else {
+    //         velo = new Pair(rand.nextInt() * 10000, rand.nextInt() * 10000);
+    //     }
+    //     return new Body(pos, velo, mass, c);
+    // }
 
     private static double factorial(int factor) {
         int res = 1;
-        for (int i = 1; i < factor; i++) {
+        for (int i = 1; i <= factor; i++) {
             res *= factor;
         }
         return res;

@@ -1,6 +1,6 @@
 /*
  * Authors: Joel Strand
- * Date Last Updated: 11/25/23
+ * Date Last Updated: 11/23/23
  */
 
 import java.awt.Color;
@@ -27,29 +27,30 @@ public class Body {
 
     // Method to calculate the distance between this body and another body 'b'
     public double distanceBetween(Body b) {
-        double dx = this.s.x - b.s.x;
-        double dy = this.s.y - b.s.y;
+        double dx = b.s.x - this.s.x ;
+        double dy = b.s.y - this.s.y;
         return Math.sqrt((dx * dx) + (dy * dy));
     }
 
-    // Method to compute the gravitational force acting on this body due to another body 'b'
+    // Method to compute the gravitational force acting on this body due to another
+    // body 'b'
     public void addForce(Body b) {
         double soft = 75; // Softening factor to prevent extreme forces when bodies are close
-        double dx = b.s.x - this.s.x ;
+        double dx = b.s.x - this.s.x;
         double dy = b.s.y - this.s.y;
-        double dist = Math.sqrt((dx * dx) + (dy * dy)); // Calculate Euclidean Distance
+        double dist = distanceBetween(b); // Calculate Euclidean Distance
         double force = (g * b.mass * this.mass) / ((dist * dist) + (soft * soft));
         this.f.x += (force * dx) / dist;
         this.f.y += (force * dy) / dist;
     }
 
-    // Method to update the body's position based on the current velocity and deltaTime
+    // Method to update the body's position based on the current velocity and
+    // deltaTime
     public void update(double deltaTime) {
         this.v.x += (deltaTime * this.f.x) / this.mass;
-        this.v.y += (deltaTime * this.f.y) / this.mass;  
+        this.v.y += (deltaTime * this.f.y) / this.mass;
         this.s.x += deltaTime * this.v.x;
         this.s.y += deltaTime * this.v.y;
-
     }
 
     // Method to compute a new body by combining this body with another body 'b'
@@ -70,7 +71,7 @@ public class Body {
 
     // Method to reset the force acting on the body to zero
     public void resetForce() {
-        this.f = new Pair(0,0);
+        this.f = new Pair(0, 0);
     }
 
     // Method to draw the body as a small red oval on the graphics object 'g'
