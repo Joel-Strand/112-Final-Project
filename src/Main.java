@@ -8,11 +8,15 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-
+import java.io.FileNotFoundException;
 import javax.swing.JPanel;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 // Main class for program execution
 public class Main extends JPanel {
+    // error logger
+    private static Logger logger = LogManager.getLogger();
 
     // Variables for simulation parameters
     private final static double deltaTime = 0.1;
@@ -23,19 +27,27 @@ public class Main extends JPanel {
     // Main method
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in); // Scanner for reading file input
-        double theta = Double.parseDouble(args[0]);
-        System.out.println(theta);
-        numBodies = s.nextInt(); // Number of bodies in universe
-        radius = s.nextDouble(); // Radius of universe
-        bodies = new ArrayList<>();
+        double theta = 0;
+        try {
+            theta = Double.parseDouble(args[0]);
 
-        // Enable animation mode and recalibrate coords
-        StdDraw.show(0);
-        StdDraw.setXscale(-radius, +radius);
-        StdDraw.setYscale(-radius, +radius);
+            System.out.println(theta);
+            numBodies = s.nextInt(); // Number of bodies in universe
+            radius = s.nextDouble(); // Radius of universe
+            bodies = new ArrayList<>();
 
-        parseInfo(bodies, numBodies, s);
-        simUniverse(bodies, theta, deltaTime, radius);
+            // Enable animation mode and recalibrate coords
+            StdDraw.show(0);
+            StdDraw.setXscale(-radius, +radius);
+            StdDraw.setYscale(-radius, +radius);
+
+            parseInfo(bodies, numBodies, s);
+            simUniverse(bodies, theta, deltaTime, radius);
+        } catch (IndexOutOfBoundsException e) {
+
+            System.out.println("Error: Please provide a value for theta -> cmd: java Main [theta] [filepath]");
+            e.printStackTrace();
+        }
     }
 
     // Panel Focus
@@ -68,7 +80,10 @@ public class Main extends JPanel {
     // Method to simulate the universe based on gravitational interactions between
     // bodies
     private static void simUniverse(ArrayList<Body> bodies, double theta, double deltaTime, double radius) {
-        while (true) {
+        for (double dt = 0; dt < Double.MAX_VALUE; dt += deltaTime) {
+            String s = "Time Elapsed: " + dt + "ms";
+            StdDraw.text(radius - (.25 * radius), 0, s);
+            StdDraw.show(0);
             // Create quad, Barnes-Hut tree for force calculation
             Quad q = new Quad(0, 0, radius * 2);
             BHTree tree = new BHTree(q);
@@ -114,6 +129,8 @@ public class Main extends JPanel {
                     velo.x += rand.nextInt(100) * 100;
                 } else if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {  // Down Arrow
                     velo.y -= rand.nextInt(100) * 100;
+                } else if (StdDraw.isKeyPressed(KeyEvent.VK_SHIFT)) {
+                    mass *= 1000000000;
                 } else {
                     double d = Math.random();
                     if (d < 0.25) {

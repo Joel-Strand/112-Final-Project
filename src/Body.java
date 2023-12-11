@@ -6,7 +6,7 @@
 import java.awt.Color;
 
 // Class representing a body in gravitational simulation
-public class Body {
+public class Body implements IBody {
 
     // Gravitational constant: g = 6.67e-11 [m3 kg-1 s-2]
     private static final double g = 0.0000000000667;
@@ -26,6 +26,7 @@ public class Body {
     }
 
     // Method to calculate the distance between this body and another body 'b'
+    @Override
     public double distanceBetween(Body b) {
         double dx = b.s.x - this.s.x ;
         double dy = b.s.y - this.s.y;
@@ -34,6 +35,7 @@ public class Body {
 
     // Method to compute the gravitational force acting on this body due to another
     // body 'b'
+    @Override
     public void addForce(Body b) {
         double soft = 75; // Softening factor to prevent extreme forces when bodies are close
         double dx = b.s.x - this.s.x;
@@ -46,6 +48,7 @@ public class Body {
 
     // Method to update the body's position based on the current velocity and
     // deltaTime
+    @Override
     public void update(double deltaTime) {
         this.v.x += (deltaTime * this.f.x) / this.mass;
         this.v.y += (deltaTime * this.f.y) / this.mass;
@@ -54,6 +57,7 @@ public class Body {
     }
 
     // Method to compute a new body by combining this body with another body 'b'
+    @Override
     public Body plus(Body b) {
         double m = this.mass + b.mass;
 
@@ -65,43 +69,52 @@ public class Body {
     }
 
     // Method to check if the body is within a specified Quad 'q'
+    @Override
     public boolean inQuad(Quad q) {
         return q.contains(this.s.x, this.s.y);
     }
 
     // Method to reset the force acting on the body to zero
+    @Override
     public void resetForce() {
         this.f = new Pair(0, 0);
     }
 
     // Method to draw the body as a small red oval on the graphics object 'g'
+    @Override
     public void draw() {
         StdDraw.setPenColor(color);
         StdDraw.point(s.x, s.y);
     }
 
     // Method to represent the body as a formatted string
+    @Override
     public String toString() {
         return String.format("%10E %10E %10E %10E %10E %10E %10E", s.x, s.y, v.x, v.y, f.x, f.y, mass);
     }
 
     // Getter methods to access the properties of the body
+    @Override
     public Pair getPos() {
         return this.s;
     }
 
+    @Override
     public Pair getVelo() {
         return this.v;
     }
 
+    @Override
     public Pair getForce() {
         return this.f;
     }
 
+    @Override
     public double getMass() {
         return this.mass;
     }
 
+    @Override
     public Color getColor() {
         return this.color;
     }

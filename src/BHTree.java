@@ -1,6 +1,6 @@
 /*
  * Authors: Joel Strand
- * Date Last Updated: 11/27/23
+ * Date Last Updated: 12/11/23
  */
 
 // Implementation of a Barnes-Hut Tree (BHTree) for a QuadTree interface
@@ -42,7 +42,6 @@ public class BHTree implements QuadTree {
         
         // If current node is external, create children and recurse with BOTH this.body and b, then add masses
         else {
-        
             subdivide(); // Create children
 
             // Recurse with both bodies to replace in appropriate new sub-quadrants

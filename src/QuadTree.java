@@ -8,5 +8,5 @@ public interface QuadTree {
     void insert(Body b);
     void updateForce(Body b);
     Quad getQuad();
-    public void setTheta(double theta);
+    void setTheta(double theta);
 }
