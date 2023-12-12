@@ -145,6 +145,43 @@ public class Main extends JPanel {
                 }
                 bodies.add(new Body(pos, velo, mass, c));
             }
+            
+double blackHoleMass = Math.pow(10, 23);
+
+// Check if Q key is pressed to activate black hole effect
+if (StdDraw.isKeyPressed(KeyEvent.VK_Q)) {
+    blackHoleActive = true;
+} else {
+    blackHoleActive = false;
+}
+
+// Apply black hole effect if active
+if (blackHoleActive) {
+    double mouseX = StdDraw.mouseX();
+    double mouseY = StdDraw.mouseY();
+
+    // Create black hole body at the mouse position
+    Body blackHole = new Body(new Pair(mouseX, mouseY), new Pair(0, 0), blackHoleMass, Color.BLACK);
+
+    // Apply gravitational attraction from the black hole to all bodies
+        bodies.add(blackHole);
+    System.out.println("blackhold added");
+}
+// WHY DOESN'T THIS WORK
+// Check for function key presses
+if (StdDraw.isKeyPressed(KeyEvent.VK_F7)) {
+    // Slow down the simulation by 50%
+    deltaTime *= 2;
+} else if (StdDraw.isKeyPressed(KeyEvent.VK_F8)) {
+    // Pause the simulation
+    simulationPaused = true;
+} else if (StdDraw.isKeyPressed(KeyEvent.VK_F9)) {
+    // Double the speed of the simulation
+    deltaTime *= 0.5;
+}
+        }
+    }
+}
         }
     }
 
