@@ -6,7 +6,7 @@ To compile, run "javac Main.java" in the command line. To run, run "java Main {t
 1.  To add new bodies, click and hold within the window of the progam to spawn bodies with random masses, velocities, and colors. New bodies will spawn at your mouse location. Bodies will stop spawning when you release the mouse.
     a. Use the SHIFT Key while creating new bodies to create bodies with a much larger mass  
 2. To create a black hole, press "Q" with your mouse within the window of the program. Multiple can be created by holding the mouse down. A black hole will spawn at your mouse location.
-3. Arrow Keys:
+3. Arrow Keys: <br />
     a. Use the LEFT arrow key to set the simulation in reverse time. <br />
     b. Use the RIGHT arrow key to set the simulation to advance time forward. <br />
     c. Use the UP arrow key to increase time by 5%. Hold key to compound effect. <br />
@@ -30,4 +30,4 @@ Theta is the threshold value from 0-2 that determines how accurately the program
 Note that depending on the size of the galaxy, theta value selected and device RAM, the program will run at different speeds. A device with at least 16 gigs of RAM will simulate any of the given galaxies seamlessly with a theta value of 1.5 or higher(heavy approximation). Devices with less RAM will experience lag when simulating large galaxies. A low theta value(little approximation) will result in heavy lag unless the simulation is being run on a super computer. A theta value of 0(brute force) will most likely cause the program to crash.
 
 ## A note about Github User u/chindesaurus: 
-We credit StdDraw.java and all of the .txt files found within /texts to u/chindesaurus on GitHub(https://github.com/chindesaurus/BarnesHut-N-Body/blob/master/StdDraw.java). The entirety of these files have been created by him, and we implemented StdDraw as it contained numerous utilities required to correctly display the graphics of the simluation.
+We credit StdDraw.java and all of the .txt files found within /texts to u/chindesaurus on GitHub (Repo Link: https://github.com/chindesaurus/BarnesHut-N-Body). The entirety of these files have been created by him, and we implemented StdDraw as it contained numerous utilities required to correctly display the graphics of the simluation.
