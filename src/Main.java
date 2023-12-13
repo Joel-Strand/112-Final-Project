@@ -1,5 +1,5 @@
 /*
- * Authors: Joel Strand, Liam Davis, Aiden Taghinia
+ * Authors: Joel Strand, Liam Davis, Aiden Taghinia, Nate Pabis
  * Date Last Updated: 12/12/23
  */
 
