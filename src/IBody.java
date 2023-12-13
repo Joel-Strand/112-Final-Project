@@ -3,6 +3,8 @@
  * Date Last Updated: 12/11/23
  */
 
+import java.awt.Color;
+
 public interface IBody {
     double distanceBetween(Body b);
     void addForce(Body b);
@@ -11,7 +13,7 @@ public interface IBody {
     boolean inQuad(Quad q);
     void resetForce();
     void draw();
-    void toString();
+    String toString();
     Pair getPos();
     Pair getVelo();
     Pair getForce();
