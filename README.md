@@ -1,4 +1,4 @@
-# COSC-112 Group 7 Final Project: The Barnes-Hut Tree Algorithm
+# COSC-112 Group 7: The Barnes-Hut Tree Algorithm
 ## Running the Program
 To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
 
