@@ -108,6 +108,7 @@ public class BHTree implements QuadTree {
     public Quad getQuad() {
         return this.quad;
     }
+    // Setter Method for theta
 
     @Override
     public void setTheta(double theta) {
