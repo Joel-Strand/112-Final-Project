@@ -20,7 +20,7 @@ There are multiple curated sample files availble for use in /texts. To create cu
 2. Second Line: radius of universe
 3. Every Line Following: {X coordinate} {Y coordinate} {VelocityX} {Velocity Y} {Mass} {int for Red Color} {int for Green Color} {int for Blue Color} <br />
     Examples: 1.88068E06 -2.32834E06 1.26796E05 -4.89028E04 1.30749E24  255 255 0 <br />
-    ............-8.57582E05 3.38400E05 5.69846E03 5.98528E02 5.40000E18  175 255 100 <br />
+    ................-8.57582E05 3.38400E05 5.69846E03 5.98528E02 5.40000E18  175 255 100 <br />
     Note: All values seperated by a white space. Any values EXCEPT Color values can be formatted with 'E' for exponential arithmetic.
 
 
