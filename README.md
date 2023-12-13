@@ -1,5 +1,6 @@
 # 112-Final-Project
-# To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
+## Running the Program
+To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
 
 ## When the simulation runs, you have numerous controls:
 1.  To add new bodies, click and hold within the window of the progam to spawn bodies with random masses, velocities, and colors. New bodies will spawn at your mouse location. Bodies will stop spawning when you release the mouse.
@@ -24,7 +25,7 @@ There are multiple curated sample files availble for use in /texts. To create cu
 
 
 ## A note about theta: 
-Theta is the threshold value from 0-2 that determines how accurately the program calculates the force vectors acting upon each body in the simlulation. 0 is a brute force calculation with no algorithmic approximations for efficiency. 2 represents maximum efficiency with much approximation. Adjust theta higher or lower to make the graphics smoother depending on how many bodies are being simulated. 
+Theta is the threshold value from 0-2 that determines how accurately the program calculates the force vectors acting upon each body in the simulation. 0 is a brute force calculation with no algorithmic approximations for efficiency. 2 represents maximum efficiency with much approximation. Adjust theta higher or lower to make the graphics smoother depending on how many bodies are being simulated. 
 
 Note that depending on the size of the galaxy, theta value selected and device RAM, the program will run at different speeds. A device with at least 16 gigs of RAM will simulate any of the given galaxies seamlessly with a theta value of 1.5 or higher(heavy approximation). Devices with less RAM will experience lag when simulating large galaxies. A low theta value(little approximation) will result in heavy lag unless the simulation is being run on a super computer. A theta value of 0(brute force) will most likely cause the program to crash.
 
