@@ -80,7 +80,6 @@ public class BHTree implements QuadTree {
     }
 
     // Method to update the forces acting on a body
-    @Override
     public void updateForce(Body b) {
         if (this.body == null || this.body.equals(b)) {
             return;
@@ -109,7 +108,6 @@ public class BHTree implements QuadTree {
         return this.quad;
     }
 
-    @Override
     public void setTheta(double theta) {
         this.theta = theta;
     }

@@ -1,11 +1,13 @@
 /*
- * Authors: Joel Strand, Liam Davis, Aiden Taghinia
+ * Authors: Joel Strand, Liam Davis, Aiden Taghinia, Nate Pabis
  * Date Last Updated: 12/13/23
  */
 
 import java.util.Scanner;
 import java.util.concurrent.DelayQueue;
 import java.util.ArrayList;
+import java.util.MissingFormatArgumentException;
+import java.util.NoSuchElementException;
 import java.util.Random;
 import java.awt.Color;
 import java.awt.RenderingHints.Key;
@@ -49,9 +51,12 @@ public class Main extends JPanel {
             paused = false;
             parseInfo(bodies, numBodies, s);
             simUniverse(bodies, theta, radius);
-        } catch (IndexOutOfBoundsException e) {
+        } catch (MissingFormatArgumentException e) {
             // Log Error
             ERROR_LOGGER.log(Level.SEVERE, "Error: no value for theta", e);
+            e.printStackTrace();
+        } catch (NoSuchElementException e) {
+            ERROR_LOGGER.log(Level.SEVERE, "Error: empty file provided", e);
             e.printStackTrace();
         }
     }
@@ -76,7 +81,7 @@ public class Main extends JPanel {
             int g = s.nextInt();
             int b = s.nextInt();
             Color c = new Color(r, g, b);
-
+        
             // Create a new Body object with the parsed information and add it to the array
             Body body = new Body(new Pair(sx, sy), new Pair(vx, vy), m, c);
             bodies.add(body);
@@ -100,7 +105,7 @@ public class Main extends JPanel {
 
             // Print and show text in top left of screen
             StdDraw.text(-radius + (.25 * radius), radius, s);
-            StdDraw.text(-radius + .25 * radius, radius - 50000, s1);
+            StdDraw.text(-radius + .25 * radius, radius - (0.1 * radius), s1);
             StdDraw.show(10);
             StdDraw.setPenColor();
 
