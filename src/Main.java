@@ -187,9 +187,10 @@ public class Main extends JPanel {
                 // Speed up time by %
                 deltaTime *= 1.05;
             } else if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {
-                // Reverse time by 20%
+                // Reverse-advancing time
                 deltaTime = -0.1;
             } else if (StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                // Forward-advancing time
                 deltaTime = 0.1;
             } else if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
                 // Set time to 0, pausing sim
