@@ -1,4 +1,4 @@
-# COSC-112 Group 7 Final Project: The Barnes-Hut Tree Algorithm
+# COSC-112 Group 7: The Barnes-Hut Tree Algorithm
 ## Running the Program
 To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
 
@@ -7,10 +7,10 @@ To compile, run "javac Main.java" in the command line. To run, run "java Main {t
     a. Use the SHIFT Key while creating new bodies to create bodies with a much larger mass  
 2. To create a black hole, press "Q" with your mouse within the window of the program. Multiple can be created by holding the mouse down. A black hole will spawn at your mouse location.
 3. Arrow Keys:
-    a. Use the LEFT arrow key to set the simulation in reverse time.
-    b. Use the RIGHT arrow key to set the simulation to advance time forward.
-    c. Use the UP arrow key to increase time by 5%. Hold key to compound effect.
-    d. Use the UP arrow key to decrease time by 5%. Hold key to compound effect.
+    a. Use the LEFT arrow key to set the simulation in reverse time. <br />
+    b. Use the RIGHT arrow key to set the simulation to advance time forward. <br />
+    c. Use the UP arrow key to increase time by 5%. Hold key to compound effect. <br />
+    d. Use the UP arrow key to decrease time by 5%. Hold key to compound effect. <br />
     Note: Program runs at a default deltaTime value of 0.1. LEFT AND RIGHT keys return deltaTime to 0.1 with the resepctive sign depending on key pressed.
 
 ## Input files and format:
