@@ -4,18 +4,22 @@
  */
 
 import java.util.Scanner;
+import java.util.concurrent.DelayQueue;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.Color;
+import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import javax.swing.JPanel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 // Main class for program execution
 public class Main extends JPanel {
-    // error logger
+    // Error logger
     private static final Logger ERROR_LOGGER = Logger.getLogger(Main.class.getName());
 
     // Variables for simulation parameters
@@ -46,6 +50,7 @@ public class Main extends JPanel {
             parseInfo(bodies, numBodies, s);
             simUniverse(bodies, theta, radius);
         } catch (IndexOutOfBoundsException e) {
+            // Log Error
             ERROR_LOGGER.log(Level.SEVERE, "Error: no value for theta", e);
             e.printStackTrace();
         }
@@ -82,9 +87,22 @@ public class Main extends JPanel {
     // bodies
     private static void simUniverse(ArrayList<Body> bodies, double theta, double radius) {
         for (double dt = 0; dt < Double.MAX_VALUE; dt += deltaTime) {
-            String s = "Time Elapsed: " + dt + "ms";
-            StdDraw.text(radius - (.25 * radius), 0, s);
-            StdDraw.show(0);
+            StdDraw.setPenColor(StdDraw.WHITE);
+            // Round dt, deltaTime for printing purposes
+            BigDecimal DT = new BigDecimal(Double.toString(dt));
+            BigDecimal DELTATIME = new BigDecimal(Double.toString(deltaTime));
+            DT = DT.setScale(4, RoundingMode.HALF_UP);
+            DELTATIME = DELTATIME.setScale(4, RoundingMode.HALF_UP);
+
+            // Strings containing info to print
+            String s = "Time Elapsed: " + DT + "ms";
+            String s1 = "Current deltaTime: " + DELTATIME + "ms";
+
+            // Print and show text in top left of screen
+            StdDraw.text(-radius + (.25 * radius), radius, s);
+            StdDraw.text(-radius + .25 * radius, radius - 50000, s1);
+            StdDraw.show(10);
+            StdDraw.setPenColor();
 
             // Create quad, Barnes-Hut tree for force calculation
             Quad q = new Quad(0, 0, radius * 2);
@@ -124,9 +142,12 @@ public class Main extends JPanel {
                 Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
 
                 if (StdDraw.isKeyPressed(KeyEvent.VK_SHIFT)) {
+                    // Increase mass of next body by 1 billion kg.
                     mass *= 1000000000;
                 } else {
+                    // Create random value from 0.0-1.0
                     double d = Math.random();
+                    // Randomly modify body's velo based on d
                     if (d < 0.25) {
                         velo = new Pair(rand.nextInt(100) * 100, rand.nextInt(100) * 100);
                     } else if (d < 0.5 && d >= 0.25) {
@@ -144,7 +165,7 @@ public class Main extends JPanel {
             if (StdDraw.isKeyPressed(KeyEvent.VK_Q)) {
                 double mouseX = StdDraw.mouseX();
                 double mouseY = StdDraw.mouseY();
-                double blackHoleMass = Math.pow(10, 23);
+                double blackHoleMass = Math.pow(10, 25);
 
                 // Create black hole body at the mouse position
                 Body blackHole = new Body(new Pair(mouseX, mouseY), new Pair(0, 0), blackHoleMass, Color.BLACK);
@@ -155,24 +176,24 @@ public class Main extends JPanel {
 
             // Check for Arrow Keys
             if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {
-                // Slow time by 20%
+                // Slow time by 5%
                 deltaTime *= .95;
-            } else if (StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) {
-                // Speed up time by 20%
-                deltaTime += 0.02;
+            } else if (StdDraw.isKeyPressed(KeyEvent.VK_UP)) {
+                // Speed up time by %
+                deltaTime *= 1.05;
             } else if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {
                 // Reverse time by 20%
-                deltaTime = -0.2;
+                deltaTime = -0.1;
+            } else if (StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                deltaTime = 0.1;
             } else if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
                 // Set time to 0, pausing sim
                 deltaTime = 0;
-            } else {
-                // Set time to original
-                deltaTime = 0.1;
             }
         }
     }
 
+    // Method to return factorial of provided factor
     private static double factorial(int factor) {
         int res = 1;
         for (int i = 1; i <= factor; i++) {
