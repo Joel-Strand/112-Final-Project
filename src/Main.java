@@ -150,13 +150,18 @@ public class Main extends JPanel {
 
                 // Check for function key presses
                 if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {
-                    // Slow time by 25%
+                    // Slow time by 25% 
                     deltaTime *= .25;
                 } else if (StdDraw.isKeyPressed(KeyEvent.VK_UP)) {
                     // Speed up time by 25%
                     deltaTime *= 1.25;
                 } else if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {
                     deltaTime = -0.2;
+                } else {
+                    deltaTime = 0.1;
+                }
+                if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
+                    deltaTime = 0;
                 } else {
                     deltaTime = 0.1;
                 }
