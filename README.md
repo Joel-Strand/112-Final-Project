@@ -3,7 +3,7 @@
 To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
 
 ## When the simulation runs, you have numerous controls:
-1.  To add new bodies, click and hold within the window of the progam to spawn bodies with random masses, velocities, and colors. New bodies will spawn at your mouse location. Bodies will stop spawning when you release the mouse.
+1.  To add new bodies, click and hold within the window of the progam to spawn bodies with random masses, velocities, and colors. New bodies will spawn at your mouse location. Bodies will stop spawning when you release the mouse. <br />
     a. Use the SHIFT Key while creating new bodies to create bodies with a much larger mass  
 2. To create a black hole, press "Q" with your mouse within the window of the program. Multiple can be created by holding the mouse down. A black hole will spawn at your mouse location.
 3. Arrow Keys: <br />
@@ -18,9 +18,9 @@ There are multiple curated sample files availble for use in /texts. To create cu
 
 1. First Line: integer of total bodies in universe
 2. Second Line: radius of universe
-3. Every Line Following: {X coordinate} {Y coordinate} {VelocityX} {Velocity Y} {Mass} {int for Red Color} {int for Green Color} {int for Blue Color}
-    Examples: 1.88068E06 -2.32834E06 1.26796E05 -4.89028E04 1.30749E24  255 255 0
-             -8.57582E05 3.38400E05 5.69846E03 5.98528E02 5.40000E18  175 255 100
+3. Every Line Following: {X coordinate} {Y coordinate} {VelocityX} {Velocity Y} {Mass} {int for Red Color} {int for Green Color} {int for Blue Color} <br />
+    Examples: 1.88068E06 -2.32834E06 1.26796E05 -4.89028E04 1.30749E24  255 255 0 <br />
+             -8.57582E05 3.38400E05 5.69846E03 5.98528E02 5.40000E18  175 255 100 <br />
     Note: All values seperated by a white space. Any values EXCEPT Color values can be formatted with 'E' for exponential arithmetic.
 
 
