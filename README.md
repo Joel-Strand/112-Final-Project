@@ -1,4 +1,4 @@
-# 112-Final-Project
+# COSC-112 Group 7 Final Project: The Barnes-Hut Tree Algorithm
 ## Running the Program
 To compile, run "javac Main.java" in the command line. To run, run "java Main {theta} < {filepath}" in the command line. The file path must be the absolute file path. 
 
@@ -13,7 +13,7 @@ To compile, run "javac Main.java" in the command line. To run, run "java Main {t
     d. Use the UP arrow key to decrease time by 5%. Hold key to compound effect.
     Note: Program runs at a default deltaTime value of 0.1. LEFT AND RIGHT keys return deltaTime to 0.1 with the resepctive sign depending on key pressed.
 
-## A note about input files and format:
+## Input files and format:
 There are multiple curated sample files availble for use in /texts. To create custom files, the following format MUST be in place, otherwise resulting in a parsing error. 
 
 1. First Line: integer of total bodies in universe
