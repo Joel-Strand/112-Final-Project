@@ -1,6 +1,6 @@
 /*
  * Authors: Joel Strand, Liam Davis, Aiden Taghinia
- * Date Last Updated: 12/6/23
+ * Date Last Updated: 12/12/23
  */
 
 import java.util.Scanner;
@@ -10,12 +10,16 @@ import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 import javax.swing.JPanel;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // Main class for program execution
 public class Main extends JPanel {
+    // error logger
+    private static final Logger ERROR_LOGGER = Logger.getLogger(Main.class.getName());
 
     // Variables for simulation parameters
-    private final static double deltaTime = 0.1;
+    private static double deltaTime = 0.1;
     private static int numBodies;
     private static double radius;
     private static ArrayList<Body> bodies;
@@ -40,9 +44,9 @@ public class Main extends JPanel {
 
             paused = false;
             parseInfo(bodies, numBodies, s);
-            simUniverse(bodies, theta, deltaTime, radius);
+            simUniverse(bodies, theta, radius);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Please provide a value for theta -> cmd: java Main [theta] [filepath]");
+            ERROR_LOGGER.log(Level.SEVERE, "Error: no value for theta", e);
             e.printStackTrace();
         }
     }
@@ -76,128 +80,98 @@ public class Main extends JPanel {
 
     // Method to simulate the universe based on gravitational interactions between
     // bodies
-    private static void simUniverse(ArrayList<Body> bodies, double theta, double deltaTime, double radius) {
+    private static void simUniverse(ArrayList<Body> bodies, double theta, double radius) {
         for (double dt = 0; dt < Double.MAX_VALUE; dt += deltaTime) {
-            if (!paused) {
-                String s = "Time Elapsed: " + dt + "ms";
-                StdDraw.text(radius - (.25 * radius), 0, s);
-                StdDraw.show(0);
-                // Create quad, Barnes-Hut tree for force calculation
-                Quad q = new Quad(0, 0, radius * 2);
-                BHTree tree = new BHTree(q);
-                tree.setTheta(theta);
+            String s = "Time Elapsed: " + dt + "ms";
+            StdDraw.text(radius - (.25 * radius), 0, s);
+            StdDraw.show(0);
 
-                // Insert bodies into the tree
-                for (Body b : bodies) {
-                    if (b.inQuad(q)) {
-                        tree.insert(b);
-                    }
+            // Create quad, Barnes-Hut tree for force calculation
+            Quad q = new Quad(0, 0, radius * 2);
+            BHTree tree = new BHTree(q);
+            tree.setTheta(theta);
+
+            // Insert bodies into the tree
+            for (Body b : bodies) {
+                if (b.inQuad(q)) {
+                    tree.insert(b);
                 }
+            }
 
-                // Reset and update forces acting on every body, then update position
-                for (Body b : bodies) {
-                    b.resetForce();
-                    tree.updateForce(b);
-                    b.update(deltaTime);
-                }
+            // Reset and update forces acting on every body, then update position
+            for (Body b : bodies) {
+                b.resetForce();
+                tree.updateForce(b);
+                b.update(deltaTime);
+            }
 
-                // Draw the bodies
-                StdDraw.clear(StdDraw.BLACK);
-                for (Body b : bodies) {
-                    b.draw();
-                }
-                StdDraw.show(10);
+            // Draw the bodies
+            StdDraw.clear(StdDraw.BLACK);
+            for (Body b : bodies) {
+                b.draw();
+            }
+            StdDraw.show(10);
 
-                // Add bodies to tree AFTER tree is created and updated
-                // Guarantees these bodies will be inserted and added next frame.
-                if (StdDraw.mousePressed()) {
-                    Random rand = new Random();
-                    double Mx = StdDraw.mouseX();
-                    double My = StdDraw.mouseY();
-                    double mass = factorial(rand.nextInt(50));
-                    Pair pos = new Pair(Mx, My);
-                    Pair velo = new Pair(0, 0);
-                    Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+            // Add bodies to tree AFTER tree is created and updated
+            // Guarantees these bodies will be inserted and added next frame.
+            if (StdDraw.mousePressed()) {
+                Random rand = new Random();
+                double Mx = StdDraw.mouseX();
+                double My = StdDraw.mouseY();
+                double mass = factorial(rand.nextInt(50));
+                Pair pos = new Pair(Mx, My);
+                Pair velo = new Pair(0, 0);
+                Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
 
-                    if (StdDraw.isKeyPressed(KeyEvent.VK_SHIFT)) {
-                        mass *= 1000000000;
-                    } else {
-                        double d = Math.random();
-                        if (d < 0.25) {
-                            velo = new Pair(rand.nextInt(100) * 100, rand.nextInt(100) * 100);
-                        } else if (d < 0.5 && d >= 0.25) {
-                            velo = new Pair(rand.nextInt(100) * 100, -(rand.nextInt(100) * 100));
-                        } else if (d < 0.75 && d >= 0.5) {
-                            velo = new Pair(-(rand.nextInt(100) * 100), rand.nextInt(100) * 100);
-                        } else {
-                            velo = new Pair(-(rand.nextInt(100) * 100), -(rand.nextInt(100) * 100));
-                        }
-                    }
-                    bodies.add(new Body(pos, velo, mass, c));
-                }
-
-                if (StdDraw.isKeyPressed(KeyEvent.VK_Q)) {
-                    double mouseX = StdDraw.mouseX();
-                    double mouseY = StdDraw.mouseY();
-                    double blackHoleMass = Math.pow(10, 23);
-
-                    // Create black hole body at the mouse position
-                    Body blackHole = new Body(new Pair(mouseX, mouseY), new Pair(0, 0), blackHoleMass, Color.BLACK);
-
-                    // Apply gravitational attraction from the black hole to all bodies
-                    bodies.add(blackHole);
-                }
-
-                // Check for function key presses
-                if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {
-                    // Slow time by 25%
-                    deltaTime *= .25;
-                } else if (StdDraw.isKeyPressed(KeyEvent.VK_UP)) {
-                    // Speed up time by 25%
-                    deltaTime *= 1.25;
-                } else if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {
-                    deltaTime = -0.2;
+                if (StdDraw.isKeyPressed(KeyEvent.VK_SHIFT)) {
+                    mass *= 1000000000;
                 } else {
-                    deltaTime = 0.1;
+                    double d = Math.random();
+                    if (d < 0.25) {
+                        velo = new Pair(rand.nextInt(100) * 100, rand.nextInt(100) * 100);
+                    } else if (d < 0.5 && d >= 0.25) {
+                        velo = new Pair(rand.nextInt(100) * 100, -(rand.nextInt(100) * 100));
+                    } else if (d < 0.75 && d >= 0.5) {
+                        velo = new Pair(-(rand.nextInt(100) * 100), rand.nextInt(100) * 100);
+                    } else {
+                        velo = new Pair(-(rand.nextInt(100) * 100), -(rand.nextInt(100) * 100));
+                    }
                 }
+                bodies.add(new Body(pos, velo, mass, c));
+            }
+
+            // Q press = Black Hole
+            if (StdDraw.isKeyPressed(KeyEvent.VK_Q)) {
+                double mouseX = StdDraw.mouseX();
+                double mouseY = StdDraw.mouseY();
+                double blackHoleMass = Math.pow(10, 23);
+
+                // Create black hole body at the mouse position
+                Body blackHole = new Body(new Pair(mouseX, mouseY), new Pair(0, 0), blackHoleMass, Color.BLACK);
+
+                // Apply gravitational attraction from the black hole to all bodies
+                bodies.add(blackHole);
+            }
+
+            // Check for Arrow Keys
+            if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN)) {
+                // Slow time by 20%
+                deltaTime *= .95;
+            } else if (StdDraw.isKeyPressed(KeyEvent.VK_RIGHT)) {
+                // Speed up time by 20%
+                deltaTime += 0.02;
+            } else if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT)) {
+                // Reverse time by 20%
+                deltaTime = -0.2;
+            } else if (StdDraw.isKeyPressed(KeyEvent.VK_SPACE)) {
+                // Set time to 0, pausing sim
+                deltaTime = 0;
+            } else {
+                // Set time to original
+                deltaTime = 0.1;
             }
         }
     }
-
-    private static Pair initVeloFromKeys(char c) {
-        Random rand = new Random();
-        switch (c) {
-            case 37:
-                return new Pair(-rand.nextInt() * 10000, 0);
-            case 38:
-                return new Pair(0, rand.nextInt() * 10000);
-            case 39:
-                return new Pair(rand.nextInt() * 10000, 0);
-            case 40:
-                return new Pair(0, -rand.nextInt() * 10000);
-            default:
-                break;
-        }
-        return null;
-    }
-
-    // private static Body createBody() {
-    // Random rand = new Random();
-    // double Mx = StdDraw.mouseX();
-    // double My = StdDraw.mouseY();
-    // double mass = factorial(rand.nextInt(50));
-    // Pair pos = new Pair(Mx, My);
-    // Pair velo = new Pair(0,0);
-    // Color c = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-
-    // if (hasNextKeyTyped()) {
-    // char c = StdDraw.nextKeyTyped();
-    // velo = initVeloFromKeys(c);
-    // } else {
-    // velo = new Pair(rand.nextInt() * 10000, rand.nextInt() * 10000);
-    // }
-    // return new Body(pos, velo, mass, c);
-    // }
 
     private static double factorial(int factor) {
         int res = 1;
